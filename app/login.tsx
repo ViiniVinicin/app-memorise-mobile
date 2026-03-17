@@ -1,16 +1,19 @@
+import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 export default function LoginScreen() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
@@ -31,7 +34,7 @@ export default function LoginScreen() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: email,
+          email: email.trim().toLowerCase(),
           senha: senha,
         }),
       });
@@ -40,6 +43,7 @@ export default function LoginScreen() {
 
       // 3. Verifica se a resposta foi um sucesso
       if (resposta.ok) {
+        await SecureStore.setItemAsync("userToken", dados.token);
         Alert.alert("Sucesso!", dados.mensagem);
         console.log("Token JWT recebido e pronto para uso:", dados.token);
       } else {
