@@ -28,7 +28,7 @@ export default function LoginScreen() {
     try {
       console.log("2. Disparando o fetch para a API...");
       // 2. Requisição para o backend do app_memorise no seu IP local
-      const resposta = await fetch("http://192.168.86.159:3000/login", {
+      const resposta = await fetch("http://192.168.0.4:3000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
