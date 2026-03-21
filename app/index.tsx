@@ -1,25 +1,41 @@
 import { Palette as P } from '@/constants/palette';
+import { Fonts } from '@/constants/theme';
+import {
+  Lexend_400Regular,
+  Lexend_600SemiBold,
+  Lexend_700Bold,
+  useFonts,
+} from '@expo-google-fonts/lexend';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import {
-  SafeAreaView,
+  Image,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function WelcomeScreen() {
+  const [fontsLoaded] = useFonts({
+    Lexend_400Regular,
+    Lexend_600SemiBold,
+    Lexend_700Bold,
+  });
+
   const router = useRouter();
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={styles.safe}>
       <StatusBar barStyle="dark-content" backgroundColor={P.background} />
 
       <View style={styles.container}>
-
-        {/* ── Header ─────────────────────────────────────── */}
         <View style={styles.header}>
           <View style={styles.logo}>
             <Ionicons name="book-outline" size={22} color={P.dark} />
@@ -27,26 +43,18 @@ export default function WelcomeScreen() {
           </View>
 
           <TouchableOpacity style={styles.helpBtn} activeOpacity={0.7}>
-            <Ionicons name="help-circle-outline" size={20} color={P.dark} />
+            <Ionicons name="help-circle-outline" size={28} color={P.dark} />
           </TouchableOpacity>
         </View>
 
-        {/* ── Hero Card ──────────────────────────────────── */}
-        {/*
-          Replace the placeholder below with:
+        <View style={styles.heroCard}>
           <Image
-            source={require('@/assets/images/hero.png')}
-            style={StyleSheet.absoluteFillObject}
+            source={require('../assets/images/MemoRiseLogo1.png')}
+            style={styles.heroImage}
             resizeMode="cover"
           />
-        */}
-        <View style={styles.heroCard}>
-          <View style={styles.heroPlaceholder}>
-            <Ionicons name="school-outline" size={72} color={P.textMuted} />
-          </View>
         </View>
 
-        {/* ── Text Block ─────────────────────────────────── */}
         <View style={styles.textBlock}>
           <Text style={styles.titleDark}>{'Desbloqueie\nSeu'}</Text>
           <Text style={styles.titlePink}>Potencial</Text>
@@ -55,14 +63,13 @@ export default function WelcomeScreen() {
           </Text>
         </View>
 
-        {/* ── Buttons ────────────────────────────────────── */}
         <View style={styles.buttons}>
           <TouchableOpacity
             style={styles.btnPrimary}
             onPress={() => router.push('/register')}
             activeOpacity={0.85}
           >
-            <Text style={styles.btnPrimaryText}>Comece Agora  →</Text>
+            <Text style={styles.btnPrimaryText}>Comece Agora →</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -70,10 +77,9 @@ export default function WelcomeScreen() {
             onPress={() => router.push('/login')}
             activeOpacity={0.85}
           >
-            <Text style={styles.btnSecondaryText}>Entre  ↩</Text>
+            <Text style={styles.btnSecondaryText}>Entre ↪</Text>
           </TouchableOpacity>
         </View>
-
       </View>
     </SafeAreaView>
   );
@@ -84,109 +90,121 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: P.background,
   },
+
   container: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 36,
+    paddingHorizontal: 32,
   },
 
-  // ── Header
+   /* -------- Header ---------*/
+
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    height: 80,
   },
+
   logo: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 16,
   },
+
   logoText: {
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 20,
+    fontFamily: Fonts.bold,
     color: P.dark,
     letterSpacing: 0.2,
   },
+
   helpBtn: {
     width: 34,
     height: 34,
     borderRadius: 17,
-    borderWidth: 1.5,
-    borderColor: P.stroke,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
-  // ── Hero
+  /* -------- Central Container ---------*/
+
   heroCard: {
-    flex: 1,
-    maxHeight: 260,
-    borderRadius: 20,
+    width: '100%',
+    height: 320,
+    borderRadius: 24,
     overflow: 'hidden',
-    backgroundColor: P.containerBg,
-    marginBottom: 28,
-  },
-  heroPlaceholder: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginBottom: 32,
   },
 
-  // ── Text
+  heroImage: {
+    width: '100%',
+    height: '100%',
+  },
+
+   /* -------- Text ---------*/
+
   textBlock: {
     alignItems: 'center',
-    marginBottom: 36,
+    marginBottom: 32,
   },
+
   titleDark: {
+    fontFamily: Fonts.bold,
     fontSize: 38,
-    fontWeight: '800',
     color: P.dark,
     textAlign: 'center',
     lineHeight: 46,
   },
+
   titlePink: {
+    fontFamily: Fonts.bold,
     fontSize: 38,
-    fontWeight: '800',
     color: P.primary,
     textAlign: 'center',
-    marginBottom: 14,
+    marginBottom: 26,
+    lineHeight: 46,
   },
+
   subtitle: {
+    fontFamily: Fonts.regular,
     fontSize: 15,
     color: P.textMuted,
     textAlign: 'center',
     lineHeight: 22,
   },
 
-  // ── Buttons
+  /* -------- Buttons ---------*/
+
   buttons: {
-    gap: 12,
+    gap: 16,
   },
+
   btnPrimary: {
     backgroundColor: P.primary,
     borderRadius: 14,
-    height: 54,
+    height: 56,
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   btnPrimaryText: {
     color: P.white,
     fontSize: 16,
-    fontWeight: '700',
+    fontFamily: Fonts.bold,
     letterSpacing: 0.3,
   },
+
   btnSecondary: {
-    backgroundColor: P.secondaryMuted,
+    backgroundColor: P.secondary,
     borderRadius: 14,
-    height: 54,
+    height: 56,
     alignItems: 'center',
     justifyContent: 'center',
   },
+
   btnSecondaryText: {
-    color: P.textMuted,
+    color: P.white,
     fontSize: 16,
-    fontWeight: '600',
+    fontFamily: Fonts.semibold,
   },
 });
