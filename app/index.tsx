@@ -1,87 +1,192 @@
-import { useRouter } from "expo-router";
-import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Palette as P } from '@/constants/palette';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 export default function WelcomeScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>app_memorise</Text>
-        <Text style={styles.subtitle}>
-          O seu companheiro de estudos inteligente
-        </Text>
-      </View>
+    <SafeAreaView style={styles.safe}>
+      <StatusBar barStyle="dark-content" backgroundColor={P.background} />
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.buttonPrimary}
-          onPress={() => router.push("/login")}
-        >
-          <Text style={styles.buttonPrimaryText}>Fazer Login</Text>
-        </TouchableOpacity>
+      <View style={styles.container}>
 
-        <TouchableOpacity
-          style={styles.buttonSecondary}
-          onPress={() => console.log("Ir para tela de cadastro em breve!")}
-        >
-          <Text style={styles.buttonSecondaryText}>Criar Nova Conta</Text>
-        </TouchableOpacity>
+        {/* ── Header ─────────────────────────────────────── */}
+        <View style={styles.header}>
+          <View style={styles.logo}>
+            <Ionicons name="book-outline" size={22} color={P.dark} />
+            <Text style={styles.logoText}>MemoRise</Text>
+          </View>
+
+          <TouchableOpacity style={styles.helpBtn} activeOpacity={0.7}>
+            <Ionicons name="help-circle-outline" size={20} color={P.dark} />
+          </TouchableOpacity>
+        </View>
+
+        {/* ── Hero Card ──────────────────────────────────── */}
+        {/*
+          Replace the placeholder below with:
+          <Image
+            source={require('@/assets/images/hero.png')}
+            style={StyleSheet.absoluteFillObject}
+            resizeMode="cover"
+          />
+        */}
+        <View style={styles.heroCard}>
+          <View style={styles.heroPlaceholder}>
+            <Ionicons name="school-outline" size={72} color={P.textMuted} />
+          </View>
+        </View>
+
+        {/* ── Text Block ─────────────────────────────────── */}
+        <View style={styles.textBlock}>
+          <Text style={styles.titleDark}>{'Desbloqueie\nSeu'}</Text>
+          <Text style={styles.titlePink}>Potencial</Text>
+          <Text style={styles.subtitle}>
+            {'Domine qualquer assunto com\nflashcards interativos.'}
+          </Text>
+        </View>
+
+        {/* ── Buttons ────────────────────────────────────── */}
+        <View style={styles.buttons}>
+          <TouchableOpacity
+            style={styles.btnPrimary}
+            onPress={() => router.push('/register')}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.btnPrimaryText}>Comece Agora  →</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.btnSecondary}
+            onPress={() => router.push('/login')}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.btnSecondaryText}>Entre  ↩</Text>
+          </TouchableOpacity>
+        </View>
+
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: {
+    flex: 1,
+    backgroundColor: P.background,
+  },
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
-    justifyContent: "space-between",
-    paddingVertical: 80,
-    paddingHorizontal: 30,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 36,
   },
+
+  // ── Header
   header: {
-    alignItems: "center",
-    marginTop: 60,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
   },
-  title: {
-    fontSize: 36,
-    fontWeight: "bold",
-    color: "#333",
-    marginBottom: 10,
+  logo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  logoText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: P.dark,
+    letterSpacing: 0.2,
+  },
+  helpBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    borderWidth: 1.5,
+    borderColor: P.stroke,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  // ── Hero
+  heroCard: {
+    flex: 1,
+    maxHeight: 260,
+    borderRadius: 20,
+    overflow: 'hidden',
+    backgroundColor: P.containerBg,
+    marginBottom: 28,
+  },
+  heroPlaceholder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  // ── Text
+  textBlock: {
+    alignItems: 'center',
+    marginBottom: 36,
+  },
+  titleDark: {
+    fontSize: 38,
+    fontWeight: '800',
+    color: P.dark,
+    textAlign: 'center',
+    lineHeight: 46,
+  },
+  titlePink: {
+    fontSize: 38,
+    fontWeight: '800',
+    color: P.primary,
+    textAlign: 'center',
+    marginBottom: 14,
   },
   subtitle: {
-    fontSize: 18,
-    color: "#666",
-    textAlign: "center",
+    fontSize: 15,
+    color: P.textMuted,
+    textAlign: 'center',
+    lineHeight: 22,
   },
-  buttonContainer: {
-    width: "100%",
+
+  // ── Buttons
+  buttons: {
+    gap: 12,
   },
-  buttonPrimary: {
-    backgroundColor: "#4A90E2",
-    padding: 16,
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 15,
+  btnPrimary: {
+    backgroundColor: P.primary,
+    borderRadius: 14,
+    height: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  buttonPrimaryText: {
-    color: "#FFF",
-    fontSize: 18,
-    fontWeight: "bold",
+  btnPrimaryText: {
+    color: P.white,
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
-  buttonSecondary: {
-    backgroundColor: "transparent",
-    padding: 16,
-    borderRadius: 8,
-    alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#4A90E2",
+  btnSecondary: {
+    backgroundColor: P.secondaryMuted,
+    borderRadius: 14,
+    height: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  buttonSecondaryText: {
-    color: "#4A90E2",
-    fontSize: 18,
-    fontWeight: "bold",
+  btnSecondaryText: {
+    color: P.textMuted,
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
