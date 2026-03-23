@@ -1,151 +1,247 @@
-import { useRouter } from "expo-router";
-import * as SecureStore from "expo-secure-store";
-import React, { useState } from "react";
+import { InputField } from '@/components/ui/input-field';
+import { Palette as P } from '@/constants/palette';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
+} from 'react-native';
+import { Fonts } from '@/constants/theme';
+import {
+  Lexend_400Regular,
+  Lexend_600SemiBold,
+  Lexend_700Bold,
+  useFonts,
+} from '@expo-google-fonts/lexend';
 
+// ── Shared OR divider ──────────────────────────────────────────────────────
+function OrDivider({ label = 'OR' }: { label?: string }) {
+  return (
+    <View style={orStyles.row}>
+      <View style={orStyles.line} />
+      <Text style={orStyles.text}>{label}</Text>
+      <View style={orStyles.line} />
+    </View>
+  );
+}
+
+const orStyles = StyleSheet.create({
+  row: { flexDirection: 'row', alignItems: 'center', marginVertical: 24 },
+  line: { flex: 1, height: 1, backgroundColor: P.stroke },
+  text: { marginHorizontal: 12, fontSize: 13, fontWeight: '600', color: P.textMuted },
+});
+
+// ── Screen ─────────────────────────────────────────────────────────────────
 export default function LoginScreen() {
+    const [fontsLoaded] = useFonts({
+        Lexend_400Regular,
+        Lexend_600SemiBold,
+        Lexend_700Bold,
+      })
+
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
 
   const handleLogin = async () => {
-    console.log("1. Botão pressionado! Iniciando tentativa...");
-    // 1. Validação básica para não enviar dados vazios
     if (!email || !senha) {
-      Alert.alert("Atenção", "Por favor, preencha e-mail e senha!");
+      Alert.alert('Atenção', 'Preencha e-mail e senha.');
       return;
     }
-
-    try {
-      console.log("2. Disparando o fetch para a API...");
-      // 2. Requisição para o backend do app_memorise no seu IP local
-      const resposta = await fetch("http://192.168.0.4:3000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email.trim().toLowerCase(),
-          senha: senha,
-        }),
-      });
-
-      const dados = await resposta.json();
-
-      // 3. Verifica se a resposta foi um sucesso
-      if (resposta.ok) {
-        await SecureStore.setItemAsync("userToken", dados.token);
-        Alert.alert("Sucesso!", dados.mensagem);
-        console.log("Token JWT recebido e pronto para uso:", dados.token);
-      } else {
-        Alert.alert("Ops!", dados.erro);
-      }
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Erro de Conexão", "Não foi possível alcançar o servidor.");
-    }
+    // TODO: chamar API de login
+    console.log({ email, senha });
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
-    >
-      <View style={styles.formContainer}>
-        <Text style={styles.title}>app_memorise</Text>
-        <Text style={styles.subtitle}>
-          Faça login para acessar seus baralhos
-        </Text>
+    <SafeAreaView style={styles.safe}>
+      <StatusBar barStyle="dark-content" backgroundColor={P.white} />
 
-        <TextInput
-          style={styles.input}
-          placeholder="E-mail"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={email}
-          onChangeText={setEmail}
-        />
+      <View style={styles.container}>
+        <KeyboardAvoidingView
+          style={styles.flex}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          {/* ── Screen Header ───────────────────────────────── */}
+          <View style={styles.screenHeader}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={styles.backBtn}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="arrow-back" size={22} color={P.dark} />
+            </TouchableOpacity>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Senha"
-          secureTextEntry
-          value={senha}
-          onChangeText={setSenha}
-        />
+            <Text style={styles.screenTitle}>MemoRise</Text>
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Entrar</Text>
-        </TouchableOpacity>
+            {/* Placeholder to keep title truly centered */}
+            <View style={styles.backBtn} />
+          </View>
+          <View style={styles.separator} />
 
-        <TouchableOpacity style={styles.registerLink}>
-          <Text style={styles.registerText}>
-            Não tem uma conta? Cadastre-se
-          </Text>
-        </TouchableOpacity>
+          {/* ── Scrollable Form ─────────────────────────────── */}
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            <Text style={styles.pageTitle}>Bem Vindo!</Text>
+
+            <InputField
+              label="Email"
+              placeholder="Digite seu Email"
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+            />
+
+            <InputField
+              label="Senha"
+              placeholder="Digite sua senha"
+              password
+              value={senha}
+              onChangeText={setSenha}
+            />
+
+            {/* Forgot password */}
+            <TouchableOpacity
+              style={styles.forgotBtn}
+              onPress={() => router.push('/forgot-password')}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.forgotText}>Forgot Password?</Text>
+            </TouchableOpacity>
+
+            {/* Enter button */}
+            <TouchableOpacity
+              style={styles.btnDark}
+              onPress={handleLogin}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.btnDarkText}>Entre  ↩</Text>
+            </TouchableOpacity>
+
+            <OrDivider />
+
+            {/* Google */}
+            <TouchableOpacity style={styles.btnGoogle} activeOpacity={0.85}>
+              <AntDesign name="google" size={20} color={P.white} style={{ marginRight: 10 }} />
+              <Text style={styles.btnGoogleText}>Continue com Google</Text>
+            </TouchableOpacity>
+
+            {/* Sign up link */}
+            <View style={styles.bottomRow}>
+              <Text style={styles.bottomMuted}>Don't have an account? </Text>
+              <TouchableOpacity onPress={() => router.push('/register')} activeOpacity={0.7}>
+                <Text style={styles.bottomBold}>Sign up for free</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
+    
   );
 }
 
 const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: P.background },
+  flex: { flex: 1 },
+
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
-    justifyContent: "center",
+    paddingHorizontal: 32,
   },
-  formContainer: {
-    paddingHorizontal: 30,
+
+  scrollContent: {
+    marginTop: 64,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#333",
-    textAlign: "center",
-    marginBottom: 10,
+
+  // ── Header
+  screenHeader: {
+      height: 80,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  subtitle: {
+  backBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  screenTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: Fonts.bold,
+    color: P.dark,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: P.stroke,
+    marginHorizontal: -32,
+  },
+
+  // ── Content
+  pageTitle: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: P.dark,
+    marginBottom: 64,
+  },
+
+  // ── Forgot
+  forgotBtn: {
+    alignSelf: 'flex-end',
+    marginTop: 32,
+    marginBottom: 64,
+  },
+  forgotText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: P.primary,
+  },
+
+  // ── Buttons
+  btnDark: {
+    backgroundColor: P.dark,
+    borderRadius: 14,
+    height: 54,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnDarkText: {
+    color: P.white,
     fontSize: 16,
-    color: "#666",
-    textAlign: "center",
-    marginBottom: 40,
+    fontWeight: '700',
   },
-  input: {
-    backgroundColor: "#FFF",
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: "#E0E0E0",
+  btnGoogle: {
+    backgroundColor: P.primary,
+    borderRadius: 14,
+    height: 54,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnGoogleText: {
+    color: P.white,
     fontSize: 16,
+    fontWeight: '700',
   },
-  button: {
-    backgroundColor: "#4A90E2",
-    padding: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 10,
+
+  // ── Bottom link
+  bottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 32,
   },
-  buttonText: {
-    color: "#FFF",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  registerLink: {
-    marginTop: 20,
-    alignItems: "center",
-  },
-  registerText: {
-    color: "#4A90E2",
-    fontSize: 16,
-  },
+  bottomMuted: { fontSize: 13, color: P.textMuted },
+  bottomBold: { fontSize: 13, fontWeight: '700', color: P.dark },
 });
