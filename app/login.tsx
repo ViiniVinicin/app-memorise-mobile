@@ -73,7 +73,7 @@ export default function LoginScreen() {
           {/* ── Screen Header ───────────────────────────────── */}
           <View style={styles.screenHeader}>
             <TouchableOpacity
-              onPress={() => router.back()}
+              onPress={() => router.replace('/')}
               style={styles.backBtn}
               activeOpacity={0.7}
             >

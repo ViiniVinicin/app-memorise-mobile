@@ -78,7 +78,7 @@ export default function RegisterScreen() {
         {/* ── Screen Header ───────────────────────────────── */}
         <View style={styles.screenHeader}>
           <TouchableOpacity
-            onPress={() => router.back()}
+            onPress={() => router.replace('/')}
             style={styles.backBtn}
             activeOpacity={0.7}
           >
@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 80,
+    marginHorizontal: 32,
   },
   backBtn: {
     width: 36,
