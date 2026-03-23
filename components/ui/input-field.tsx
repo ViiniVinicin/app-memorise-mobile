@@ -1,13 +1,14 @@
 import { Palette as P } from '@/constants/palette';
+import { Fonts } from '@/constants/theme';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TextInputProps,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputProps,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
@@ -76,7 +77,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 13,
-    fontWeight: '600',
+    fontFamily: Fonts.regular,
     color: P.dark,
     marginBottom: 6,
   },
@@ -95,6 +96,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 15,
+    fontFamily: Fonts.regular,
     color: P.dark,
     height: '100%',
   },
